@@ -1,0 +1,35 @@
+@import 'part:@sanity/base/theme/variables-style';
+
+.componentError {
+  color: var(--state-danger-color);
+}
+
+.componentFeedback {
+  color: var(--state-info-color);
+}
+
+.componentBad {
+  color: var(--state-danger-color);
+}
+
+.componentOk {
+  color: var(--state-warning-color);
+}
+
+.componentGood {
+  color: var(--state-success-color);
+}
+
+.componentUnknown {
+  color: var(--gray);
+}
+
+.label {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}

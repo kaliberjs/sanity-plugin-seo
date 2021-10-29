@@ -1,0 +1,80 @@
+@import 'part:@sanity/base/theme/typography/headings-style';
+@import 'part:@sanity/base/theme/variables-style';
+
+.component {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 1em;
+  max-width: 640px;
+  margin: auto;
+
+  & > * {
+    max-width: 100%;
+  }
+
+  & > :not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  & > .componentSummary {
+    margin-bottom: 2em;
+  }
+
+  & > .serp {
+    align-self: flex-start;
+  }
+}
+
+.summaryList {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 0.5em 1em;
+
+  & > * {
+    min-width: 0;
+  }
+}
+
+.serp {
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+
+  & > * {
+    max-width: 100%;
+  }
+}
+
+.resultsList {
+  padding: 0;
+  list-style: none;
+
+  & > :not(:last-child) {
+    margin-bottom: 0.75em;
+  }
+}
+
+.componentResult {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+}
+
+.rating {
+  padding: 2px 0;
+}
+
+.label a {
+  color: inherit;
+
+  &:first-child {
+    font-weight: bold;
+    text-decoration: none;
+  }
+}
+
+.componentHeading {
+  composes: heading3;
+  margin: 0;
+}
