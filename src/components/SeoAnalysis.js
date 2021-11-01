@@ -112,7 +112,7 @@ function useSeo({ document }) {
 
   React.useEffect(
     () => {
-      if (!document?._id) return
+      if (!document?._id || !document?.slug) return
 
       let valid = true
       const timeoutId = setTimeout(
