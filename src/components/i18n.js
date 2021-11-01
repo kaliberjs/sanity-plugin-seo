@@ -191,7 +191,7 @@ export const i18n = new Jed({
       '%1$sKeyphrase in meta description%2$s: The meta description has been specified, but it does not contain the keyphrase. %3$sFix that%4$s': [
         '%1$sKeyphrase in je meta description%2$s: Er is een meta description opgegeven, maar je keyphrase komt er niet in voor. %3$sNoem je keyphrase%4$s.'
       ],
-      '%1$sMeta description length%3$s: No meta description has been specified. Search engines will display copy from the page instead. %2$sMake sure to write one%3$s!': [
+      '%1$sMeta description length%3$s:  No meta description has been specified. Search engines will display copy from the page instead. %2$sMake sure to write one%3$s!': [
         '%1$sMeta description lengte%3$s: Er is geen meta beschrijving opgegeven. Dit betekent dat zoekmachines in plaats daarvan content uit je pagina laten zien. %2$sZorg dat je een meta description toevoegt%3$s!'
       ],
       '%1$sMeta description length%3$s: The meta description is too short (under %4$d characters). Up to %5$d characters are available. %2$sUse the space%3$s!': [
