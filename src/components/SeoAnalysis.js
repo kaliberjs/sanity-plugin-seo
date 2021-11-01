@@ -9,7 +9,6 @@ import { i18n } from './i18n'
 import { studio } from '@kaliber/sanity-preview'
 import sanityClient from 'part:@sanity/base/client'
 import { resolveProductionUrl } from 'part:@kaliber/resolveProductionUrl'
-import multiLanguagePluginConfig from 'config:@kaliber/sanity-plugin-multi-language' // if we want to remove this dependency we should import a custom part that would resolve to something similar
 
 const ratingRenderers = {
   error: RatingError,
@@ -135,7 +134,7 @@ function useSeo({ document }) {
           html,
           url: publishedUrl,
           seo: document.seo ?? {},
-          locale: 'nl_NL', // TODO: get language from multi-lang
+          locale: 'nl_NL' // language in which we display messages
         })
 
         setSeo(seo)
