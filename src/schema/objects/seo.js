@@ -40,14 +40,8 @@ export const seo = {
       fields: [
         {
           title: 'Titel',
-          name: 'overrideTitle', // TODO: dit moet denk ik weg, check even het nu van alle andere velden
-          type: 'string',
-        },
-        {
-          title: 'Op te halen titel',
           name: 'title',
           type: 'string',
-          hidden: true
         },
         {
           title: 'Beschrijving',
@@ -56,24 +50,8 @@ export const seo = {
         },
         {
           title: 'Share afbeelding',
-          name: 'overrideShareImage',
-          type: 'image',
-          options: {
-            hotspot: true
-          },
-          fields: [
-            {
-              title: 'Alternatieve beschrijving',
-              name: 'alt',
-              type: 'string'
-            },
-          ]
-        },
-        {
-          title: 'Op te halen share afbeelding',
           name: 'shareImage',
           type: 'image',
-          hidden: true,
           options: {
             hotspot: true
           },
