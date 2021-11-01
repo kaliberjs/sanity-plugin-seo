@@ -214,7 +214,7 @@ async function getUrls(document) {
 
   const url = isDraft
     ? await resolveProductionUrl(document, {
-        queryString: { secret: await studio.getPreviewSecret({ sanityClient }) }
+        queryString: { preview: await studio.getPreviewSecret({ sanityClient }) }
       })
     : publishedUrl
 
