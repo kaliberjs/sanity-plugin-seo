@@ -1,11 +1,11 @@
-# Kaliber Sanity Multi Language Plugin
+# Kaliber Sanity SEO Plugin
 
-Document level translations.
+Yoast SEO Analysis.
 
 ## Installation
 
 ```
-> yarn add @kaliber/sanity-plugin-multi-language
+> yarn add @kaliber/sanity-plugin-seo
 ```
 
 `admin/sanity.json`
@@ -13,7 +13,7 @@ Document level translations.
 ```json
 {
   "plugins": [
-    "@kaliber/sanity-plugin-multi-language",
+    "@kaliber/sanity-plugin-seo",
     ...
   ],
   ...
@@ -25,12 +25,12 @@ Document level translations.
 `admin/deskStructure.js`
 
 ```js
-import { Translations, typeHasLanguage } from '@kaliber/sanity-plugin-multi-language'
+import { SeoAnalysis, typeHasSeo } from '@kaliber/sanity-plugin-seo'
 
 export function getDefaultDocumentNode({ schemaType }) {
   return S.document().views([
     S.view.form(),
-    ...(typeHasLanguage(schemaType) ? [S.view.component(Translations).title('Vertalingen')] : [])
+    ...(typeHasSeo(schemaType) ? [S.view.component(SeoAnalysis).title('SEO')] : []),
   ])
 }
 ```
@@ -38,9 +38,9 @@ export function getDefaultDocumentNode({ schemaType }) {
 `schema/documents/pagina.js`
 
 ```js
-import { withMultipleLanguages } from '@kaliber/sanity-plugin-multi-language'
+import { withSeo } from '@kaliber/sanity-plugin-seo'
 
-export const pagina = withMultipleLanguages()({
+export const pagina = withSeo()({
   type: 'document',
   name: 'pagina',
   title: 'Pagina',
@@ -59,7 +59,7 @@ export const pagina = withMultipleLanguages()({
 ```
 
 ```
-admin/> yarn link @kaliber/sanity-plugin-multi-language
+admin/> yarn link @kaliber/sanity-plugin-seo
 ```
 
 ## Publish
