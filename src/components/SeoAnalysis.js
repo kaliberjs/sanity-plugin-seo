@@ -3,7 +3,6 @@ import { Paper, SeoAssessor, ContentAssessor, interpreters, string, helpers } fr
 import CornerstoneSeoAssessor from 'yoastseo/src/cornerstone/seoAssessor'
 import CornerstoneContentAssessor from 'yoastseo/src/cornerstone/contentAssessor'
 import SerpPreview from 'react-serp-preview'
-import { useIsMountedRef } from '@kaliber/use-is-mounted-ref'
 import { RatingError, RatingFeedback, RatingBad, RatingOk, RatingGood, RatingUnknown } from './Rating'
 import styles from './SeoAnalysis.css'
 import { i18n } from './i18n'
@@ -109,23 +108,28 @@ function Heading({ children }) {
 }
 
 function useSeo({ document }) {
-  const isMountedRef = useIsMountedRef()
   const [seo, setSeo] = React.useState(assess.defaultResult)
 
   React.useEffect(
     () => {
       if (!document?._id) return
 
-      run().catch(error => {
-        // TODO: reportError(error)
-        console.error(error)
-      })
+      let valid = true
+      const timeoutId = setTimeout(
+        () => run().catch(error => {
+          // TODO: reportError(error)
+          console.error(error)
+        }),
+        500
+      )
 
       async function run() {
+        if (!valid) return
         const { url, publishedUrl } = await getUrls(document)
+        if (!valid) return
         const html = await getHtml({ url })
 
-        if (!isMountedRef.current) return
+        if (!valid) return
 
         const seo = assess({
           html,
@@ -136,8 +140,13 @@ function useSeo({ document }) {
 
         setSeo(seo)
       }
+
+      return () => {
+        valid = false
+        clearTimeout(timeoutId)
+      }
     },
-    [isMountedRef, document]
+    [document]
   )
 
   return seo
