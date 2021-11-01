@@ -10,6 +10,7 @@ import { i18n } from './i18n'
 import { studio } from '@kaliber/sanity-preview'
 import sanityClient from 'part:@sanity/base/client'
 import { resolveProductionUrl } from 'part:@kaliber/resolveProductionUrl'
+import multiLanguagePluginConfig from 'config:@kaliber/sanity-plugin-multi-language' // if we want to remove this dependency we should import a custom part that would resolve to something similar
 
 const ratingRenderers = {
   error: RatingError,
@@ -20,13 +21,14 @@ const ratingRenderers = {
   default: RatingUnknown
 }
 
-export function SeoAnalysis({ document: { displayed, draft, published } }) {
-  const hasContent = Boolean(displayed._id)
-  const { seo, content, meta } = useSeo({ displayed, draft, published })
+export function SeoAnalysis({ document: { draft, published } }) {
+  const document = draft || published
+  const hasContent = Boolean(document._id)
+  const { seo, content, meta } = useSeo({ document })
 
   return (
     <div className={styles.component}>
-      <Summary seo={displayed.seo} seoScore={seo.score} contentScore={content.score} />
+      <Summary seo={document.seo} seoScore={seo.score} contentScore={content.score} />
 
       <Heading>Preview</Heading>
 
@@ -106,13 +108,13 @@ function Heading({ children }) {
   return <h3 className={styles.componentHeading}>{children}</h3>
 }
 
-function useSeo({ displayed, draft, published }) {
+function useSeo({ document }) {
   const isMountedRef = useIsMountedRef()
   const [seo, setSeo] = React.useState(assess.defaultResult)
 
   React.useEffect(
     () => {
-      if (!displayed._id) return
+      if (!document._id) return
 
       run().catch(error => {
         // TODO: reportError(error)
@@ -120,7 +122,6 @@ function useSeo({ displayed, draft, published }) {
       })
 
       async function run() {
-        const document = draft || published
         const { url, publishedUrl } = await getUrls(document)
         const html = await getHtml({ url })
 
@@ -129,14 +130,14 @@ function useSeo({ displayed, draft, published }) {
         const seo = assess({
           html,
           url: publishedUrl,
-          seo: displayed.seo ?? {},
+          seo: document.seo ?? {},
           locale: 'nl_NL', // TODO: get language from multi-lang
         })
 
         setSeo(seo)
       }
     },
-    [isMountedRef, displayed, draft, published]
+    [isMountedRef, document]
   )
 
   return seo
