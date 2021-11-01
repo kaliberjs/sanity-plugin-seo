@@ -23,12 +23,12 @@ const ratingRenderers = {
 
 export function SeoAnalysis({ document: { draft, published } }) {
   const document = draft || published
-  const hasContent = Boolean(document._id)
+  const hasContent = Boolean(document?._id)
   const { seo, content, meta } = useSeo({ document })
 
   return (
     <div className={styles.component}>
-      <Summary seo={document.seo} seoScore={seo.score} contentScore={content.score} />
+      <Summary seo={document?.seo} seoScore={seo.score} contentScore={content.score} />
 
       <Heading>Preview</Heading>
 
@@ -114,7 +114,7 @@ function useSeo({ document }) {
 
   React.useEffect(
     () => {
-      if (!document._id) return
+      if (!document?._id) return
 
       run().catch(error => {
         // TODO: reportError(error)
