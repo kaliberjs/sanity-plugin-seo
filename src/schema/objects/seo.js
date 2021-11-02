@@ -4,17 +4,17 @@ export const seo = {
   type: 'object',
   fields: [
     {
-      title: 'Focus keyphrase',
+      title: 'Focus keyphrase', // @peeke, waar is dit voor?
       name: 'keyphrase',
       type: 'string',
     },
     {
-      title: 'Synoniemen',
+      title: 'Synoniemen', // @peeke, waar is dit voor?
       name: 'synonyms',
       type: 'string',
     },
     {
-      title: 'Markeren als cornerstone content',
+      title: 'Markeren als cornerstone content', // @peeke, wat betekent dit?
       name: 'cornerstone',
       type: 'boolean',
     },
@@ -75,7 +75,7 @@ export const seo = {
       },
       fields: [
         {
-          title: 'Canonical url',
+          title: 'Canonical url', // @peeke moet dit een absolute of relative url zijn?
           name: 'canonicalUrl',
           type: 'string',
         },
