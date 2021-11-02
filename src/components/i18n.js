@@ -294,8 +294,8 @@ export const i18n = new Jed({
       '%1$sKeyphrase in title%3$s: Does not contain the exact match. %2$sTry to write the exact match of your keyphrase in the SEO title and put it at the beginning of the title%3$s.': [
         '%1$sKeyphrase in titel%2$s: Je SEO titel bevat geen exacte met je focus keyphrase. %2$sProbeer je exacte keyphrase aan het begin van je SEO titel terug te laten komen%3$s.'
       ],
-      '%1$sKeyphrase in title%3$s: Not all the words from your keyphrase \'%4$s\' appear in the SEO title. %2$sFor the best SEO results write the exact match of your keyphrase in the SEO title, and put the keyphrase at the beginning of the title%3$s.': [
-        '%1$sKeyphrase in titel%2$s: Niet alle woorden uit je keyphrase \'%4$s\' komen voor in je SEO titel. %2$Voor de beste SEO resultaten laat je je exacte keyphrase aan het begin van je SEO titel terugkomen%3$s.'
+      '%1$sKeyphrase in title%3$s: Not all the words from your keyphrase "%4$s" appear in the SEO title. %2$sFor the best SEO results write the exact match of your keyphrase in the SEO title, and put the keyphrase at the beginning of the title%3$s.': [
+        '%1$sKeyphrase in titel%2$s: Niet alle woorden uit je keyphrase \'%4$s\' komen voor in je SEO titel. %2$sVoor de beste SEO resultaten laat je je exacte keyphrase aan het begin van je SEO titel terugkomen%3$s.'
       ],
       '%1$sKeyphrase in slug%2$s: Great work!': [
         '%1$sKeyphrase in slug%2$s: Top!'
