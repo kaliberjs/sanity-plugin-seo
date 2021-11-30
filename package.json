@@ -26,6 +26,7 @@
     "prepare": "[ -f scripts/addPeerDependencies.js ] && node scripts/addPeerDependencies.js"
   },
   "peerDependencies": {
+    "@kaliber/sanity-preview": "^0.0.1",
     "@kaliber/use-is-mounted-ref": "^1.0.2",
     "classnames": "^2.3.1",
     "groq": "^2.15.0",
@@ -36,6 +37,7 @@
     "sanipack": "^2.1.0"
   },
   "dependencies": {
+    "jed": "^1.1.1",
     "react-serp-preview": "^1.0.0",
     "yoastseo": "^1.91.0"
   }
