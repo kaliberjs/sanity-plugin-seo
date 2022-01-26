@@ -66,7 +66,7 @@ export const seo = {
       ]
     },
     {
-      title: 'Advanced',
+      title: 'Geavanceerd',
       name: 'advanced',
       type: 'object',
       options: {
@@ -74,6 +74,12 @@ export const seo = {
         collapsed: true
       },
       fields: [
+        {
+          title: 'Activeren',
+          name: 'enabled',
+          type: 'boolean',
+          initialValue: true,
+        },
         {
           title: 'Canonical url', // @peeke moet dit een absolute of relative url zijn?
           name: 'canonicalUrl',
