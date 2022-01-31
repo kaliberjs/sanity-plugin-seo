@@ -9,17 +9,17 @@ export const seo = {
       type: 'string',
     },
     {
-      title: 'Synoniemen', // @peeke, waar is dit voor?
+      title: 'Synonyms', // @peeke, waar is dit voor?
       name: 'synonyms',
       type: 'string',
     },
     {
-      title: 'Markeren als cornerstone content', // @peeke, wat betekent dit?
+      title: 'Mark as cornerstone content', // @peeke, wat betekent dit?
       name: 'cornerstone',
       type: 'boolean',
     },
     {
-      title: 'SEO titel',
+      title: 'SEO title',
       name: 'title',
       type: 'string',
     },
@@ -27,7 +27,7 @@ export const seo = {
       title: 'Meta description',
       name: 'description',
       type: 'text',
-      validation: Rule => Rule.max(156).warning('Probeer niet meer dan 156 karakters te gebruiken.')
+      validation: Rule => Rule.max(156).warning('Try to limit the meta description to 156 characters.')
     },
     {
       title: 'Social',
@@ -39,17 +39,17 @@ export const seo = {
       },
       fields: [
         {
-          title: 'Titel',
+          title: 'Title',
           name: 'title',
           type: 'string',
         },
         {
-          title: 'Beschrijving',
+          title: 'Description',
           name: 'description',
           type: 'text'
         },
         {
-          title: 'Share afbeelding',
+          title: 'Share image',
           name: 'shareImage',
           type: 'image',
           options: {
@@ -57,7 +57,7 @@ export const seo = {
           },
           fields: [
             {
-              title: 'Alternatieve beschrijving',
+              title: 'Alternative description',
               name: 'alt',
               type: 'string'
             },
@@ -66,7 +66,7 @@ export const seo = {
       ]
     },
     {
-      title: 'Geavanceerd',
+      title: 'Advanced',
       name: 'advanced',
       type: 'object',
       options: {
@@ -75,7 +75,7 @@ export const seo = {
       },
       fields: [
         {
-          title: 'Activeren',
+          title: 'Enable',
           name: 'enabled',
           type: 'boolean',
           initialValue: true,
@@ -86,13 +86,13 @@ export const seo = {
           type: 'string',
         },
         {
-          title: 'Indexatie toestaan (index/noindex)',
+          title: 'Allow indexation (index/noindex)',
           name: 'allowIndex',
           type: 'boolean',
           defaultValue: true,
         },
         {
-          title: 'Volgen van links toestaan (follow/nofollow)',
+          title: 'Allow following links (follow/nofollow)',
           name: 'allowFollow',
           type: 'boolean',
         },
