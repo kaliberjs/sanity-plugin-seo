@@ -5,8 +5,8 @@ export { SeoAnalysis } from './components/SeoAnalysis'
 
 export function withSeo() {
   return schema => ({
-     ...schema,
-     fields: schema.fields.concat({
+    ...schema,
+    fields: schema.fields.concat({
       title: 'SEO',
       name: 'seo',
       type: 'seo',
