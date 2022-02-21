@@ -83,12 +83,13 @@ export const seo = {
           title: 'Indexatie toestaan (index/noindex)',
           name: 'allowIndex',
           type: 'boolean',
-          defaultValue: true,
+          initialValue: true
         },
         {
           title: 'Volgen van links toestaan (follow/nofollow)',
           name: 'allowFollow',
           type: 'boolean',
+          initialValue: true
         },
       ]
     }
