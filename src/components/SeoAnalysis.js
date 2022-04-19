@@ -8,7 +8,7 @@ import styles from './SeoAnalysis.css'
 import { i18n } from './i18n'
 import { studio } from '@kaliber/sanity-preview'
 import sanityClient from 'part:@sanity/base/client'
-import { resolveProductionUrl } from 'part:@kaliber/resolveProductionUrl'
+import { resolveProductionUrl } from 'part:@kaliber/resolve-production-url'
 
 const ratingRenderers = {
   error: RatingError,
