@@ -83,12 +83,13 @@ export const seo = {
           title: 'Allow indexation (index/noindex)',
           name: 'allowIndex',
           type: 'boolean',
-          defaultValue: true,
+          initialValue: true
         },
         {
           title: 'Allow following links (follow/nofollow)',
           name: 'allowFollow',
           type: 'boolean',
+          initialValue: true
         },
       ]
     }
