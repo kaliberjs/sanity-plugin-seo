@@ -970,11 +970,6 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@kaliber/sanity-preview@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@kaliber/sanity-preview/-/sanity-preview-0.0.1.tgz#defab22b25a14261c7c761b4dfe96f47c912de0b"
-  integrity sha512-WA01GUUsHB5oUnbBexixsSKl9HSWcXxBPCqlCDmwFicMZUmVLQyMkg1+gwtnnzdjTVqAk10Aki/1lGcvNPRUlw==
-
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.3":
   version "2.1.8-no-fsevents.3"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/chokidar-2/-/chokidar-2-2.1.8-no-fsevents.3.tgz#323d72dd25103d0c4fbdce89dadf574a787b1f9b"
