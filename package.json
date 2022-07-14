@@ -12,6 +12,7 @@
     "lib/**",
     "sanity.json",
     "LICENCE",
+    "config.dist.json",
     "package.json",
     "README.md"
   ],
