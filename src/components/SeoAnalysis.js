@@ -5,10 +5,13 @@ import CornerstoneContentAssessor from 'yoastseo/src/cornerstone/contentAssessor
 import SerpPreview from 'react-serp-preview'
 import { RatingError, RatingFeedback, RatingBad, RatingOk, RatingGood, RatingUnknown } from './Rating'
 import styles from './SeoAnalysis.css'
-import { i18n } from './i18n'
+import pluginConfig from 'config:@kaliber/sanity-plugin-seo'
+import { i18n as getI18n} from './i18n'
 import { studio } from '@kaliber/sanity-preview'
 import sanityClient from 'part:@sanity/base/client'
 import { resolveProductionUrl } from 'part:@kaliber/resolve-production-url'
+
+const i18n = getI18n(pluginConfig.language)
 
 const ratingRenderers = {
   error: RatingError,
@@ -134,7 +137,7 @@ function useSeo({ document }) {
           html,
           url: publishedUrl,
           seo: document.seo ?? {},
-          locale: 'nl_NL' // language in which we display messages
+          locale: pluginConfig.icu // language in which we display messages
         })
 
         setSeo(seo)

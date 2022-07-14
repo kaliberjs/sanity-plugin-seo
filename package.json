@@ -12,6 +12,7 @@
     "lib/**",
     "sanity.json",
     "LICENCE",
+    "config.dist.json",
     "package.json",
     "README.md"
   ],
@@ -30,8 +31,8 @@
     "@kaliber/use-is-mounted-ref": "^1.0.2",
     "classnames": "^2.3.1",
     "groq": "^2.29.3",
-    "react": "^18.0.0",
-    "react-icons": "^4.3.1"
+    "react": "^18.2.0",
+    "react-icons": "^4.4.0"
   },
   "devDependencies": {
     "sanipack": "^2.1.0"
