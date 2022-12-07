@@ -5,13 +5,10 @@ import CornerstoneContentAssessor from 'yoastseo/src/cornerstone/contentAssessor
 import SerpPreview from 'react-serp-preview'
 import { RatingError, RatingFeedback, RatingBad, RatingOk, RatingGood, RatingUnknown } from './Rating'
 import styles from './SeoAnalysis.css'
-import pluginConfig from 'config:@kaliber/sanity-plugin-seo'
 import { i18n as getI18n} from './i18n'
 import { studio } from '@kaliber/sanity-preview'
-import sanityClient from 'part:@sanity/base/client'
-import { resolveProductionUrl } from 'part:@kaliber/resolve-production-url'
 
-const i18n = getI18n(pluginConfig.language)
+const i18n = getI18n('en')
 
 const ratingRenderers = {
   error: RatingError,
@@ -22,10 +19,14 @@ const ratingRenderers = {
   default: RatingUnknown
 }
 
-export function SeoAnalysis({ document: { draft, published } }) {
+export function seoView(S, context, config) {
+  return S.view.component(x => <SeoAnalysis {...x} client={context.getClient({ apiVersion: '2022-12-07' })} resolveProductionUrl={config.resolveProductionUrl} />).title(config?.title ?? 'SEO')
+}
+
+export function SeoAnalysis({ document: { draft, published }, client, resolveProductionUrl }) {
   const document = draft || published
   const hasContent = Boolean(document?._id)
-  const { seo, content, meta } = useSeo({ document })
+  const { seo, content, meta } = useSeo({ resolveProductionUrl, client, document })
 
   return (
     <div className={styles.component}>
@@ -109,7 +110,7 @@ function Heading({ children }) {
   return <h3 className={styles.componentHeading}>{children}</h3>
 }
 
-function useSeo({ document }) {
+function useSeo({ resolveProductionUrl, client, document }) {
   const [seo, setSeo] = React.useState(assess.defaultResult)
 
   React.useEffect(
@@ -127,7 +128,7 @@ function useSeo({ document }) {
 
       async function run() {
         if (!valid) return
-        const { url, publishedUrl } = await getUrls(document)
+        const { url, publishedUrl } = await getUrls(resolveProductionUrl, client, document)
         if (!valid) return
         const html = await getHtml({ url })
 
@@ -137,7 +138,7 @@ function useSeo({ document }) {
           html,
           url: publishedUrl,
           seo: document.seo ?? {},
-          locale: pluginConfig.icu // language in which we display messages
+          locale: 'nl' // language in which we display messages
         })
 
         setSeo(seo)
@@ -210,14 +211,14 @@ function assess({ html, url, locale, seo: { keyphrase = '', synonyms = '', corne
   }
 }
 
-async function getUrls(document) {
+async function getUrls(resolveProductionUrl, client, document) {
   const isDraft = document._id.startsWith('drafts.')
 
   const publishedUrl = await resolveProductionUrl(document)
 
   const url = isDraft
     ? await resolveProductionUrl(document, {
-        queryString: { preview: await studio.getPreviewSecret({ sanityClient }) }
+        queryString: { preview: await studio.getPreviewSecret({ sanityClient: client }) }
       })
     : publishedUrl
 
