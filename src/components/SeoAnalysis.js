@@ -185,7 +185,7 @@ function useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document }) 
         clearTimeout(timeoutId)
       }
     },
-    [document]
+    [document, assessmentUrl, canonicalUrl, mainContentSelector]
   )
 
   return seo
