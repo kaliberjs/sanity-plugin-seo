@@ -5,10 +5,6 @@
     "browser": true
   },
   "extends": [
-    "sanity",
-    "sanity/typescript",
-    "sanity/react",
-    "plugin:react-hooks/recommended",
-    "plugin:prettier/recommended"
+    "./node_modules/@kaliber/build/.eslintrc"
   ]
 }

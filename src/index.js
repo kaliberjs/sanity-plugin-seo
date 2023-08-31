@@ -1,17 +1,15 @@
-import {definePlugin} from 'sanity'
-import { seo as schema } from './schema/objects/seo'
+import { definePlugin } from 'sanity'
+import { buildSchema } from './schema'
 
-export {seoView} from './components/SeoAnalysis'
+export { SeoAnalysis } from './components/SeoAnalysis'
 
-export const seo = definePlugin((config = {}) => ({
+export const seo = definePlugin(({ resolvePublishedUrl, resolvePreviewUrl }) => ({
   name: 'sanity-plugin-seo',
   schema: {
-    types: [schema]
+    types: (prev, context) => prev.concat(buildSchema({ resolvePublishedUrl, resolvePreviewUrl }))
   },
 }))
 
-export function typeHasSeo(type) {
-  return schema.get(type).fields.some(x => x.name === 'seo')
+export function typeHasSeo({ schema, schemaType }) {
+  return schema.get(schemaType).fields.some(x => x.name === 'seo')
 }
-
-export const objects = [schema]

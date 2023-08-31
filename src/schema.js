@@ -1,7 +1,11 @@
-export const seo = {
+export const buildSchema = ({ resolvePublishedUrl, resolvePreviewUrl }) => ({
   title: 'SEO',
   name: 'seo',
   type: 'object',
+  options: {
+    resolvePublishedUrl,
+    resolvePreviewUrl
+  },
   fields: [
     {
       title: 'Focus keyphrase', // @peeke, waar is dit voor?
@@ -94,4 +98,4 @@ export const seo = {
       ]
     }
   ]
-}
+})

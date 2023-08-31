@@ -3,80 +3,41 @@
   "version": "0.0.7",
   "keywords": [
     "sanity",
-    "sanity-plugin"
+    "sanity-plugin",
+    "seo"
   ],
   "license": "MIT",
-  "exports": {
-    ".": {
-      "source": "./src/index.js",
-      "import": "./lib/index.esm.js",
-      "require": "./lib/index.js",
-      "default": "./lib/index.esm.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "main": "./lib/index.js",
-  "module": "./lib/index.esm.js",
-  "source": "./src/index.js",
+  "main": "./src/index.js",
   "files": [
-    "src",
-    "lib",
-    "v2-incompatible.js",
-    "sanity.json"
+    "src/**",
+    "sanity.json",
+    "LICENCE",
+    "package.json",
+    "readme.md",
+    "v2-incompatible.js"
   ],
-  "scripts": {
-    "prebuild": "npm run clean && plugin-kit verify-package --silent && pkg-utils",
-    "build": "pkg-utils build",
-    "clean": "rimraf lib",
-    "link-watch": "plugin-kit link-watch",
-    "lint": "eslint .",
-    "prepublishOnly": "npm run build",
-    "watch": "pkg-utils watch"
-  },
   "publishConfig": {
     "access": "public"
+  },
+  "scripts": {
+    "prepare": "[ -f scripts/addPeerDependencies.js ] && node scripts/addPeerDependencies.js"
   },
   "dependencies": {
     "@sanity/incompatible-plugin": "^1.0.4",
     "jed": "^1.1.1",
     "react-serp-preview": "^1.0.0",
-    "yoastseo": "^1.91.0"
+    "yoastseo": "^1.91.2"
   },
   "devDependencies": {
-    "@sanity/pkg-utils": "^1.18.0",
-    "@sanity/plugin-kit": "^2.1.17",
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
-    "eslint": "^8.28.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-config-sanity": "^6.0.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.31.11",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^2.8.0",
-    "prettier-plugin-packagejson": "^2.3.0",
-    "react": "^18",
-    "rimraf": "^3.0.2",
-    "rollup-plugin-postcss": "^4.0.2",
-    "sanity": "3.0.0-rc.2",
-    "typescript": "^4.9.3"
+    "@kaliber/build": "^0.0.143"
   },
   "peerDependencies": {
     "@kaliber/sanity-preview": "^0.0.1",
     "@kaliber/use-is-mounted-ref": "^1.0.2",
-    "classnames": "^2.3.1",
-    "groq": "^2.29.3",
+    "classnames": "^2.3.2",
+    "groq": "^3.16.1",
     "react": "^18.2.0",
-    "react-icons": "^4.4.0",
-    "sanity": "3.0.0-rc.3"
-  },
-  "engines": {
-    "node": ">=14"
-  },
-  "sanityPlugin": {
-    "verifyPackage": {
-      "eslintImports": false,
-      "tsc": false
-    }
+    "react-icons": "^4.10.1",
+    "sanity": "^3.16.1"
   }
 }

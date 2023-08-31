@@ -1,14 +1,22 @@
 import React from 'react'
+import SerpPreview from 'react-serp-preview'
+import { useSchema, useClient } from 'sanity'
 import { Paper, SeoAssessor, ContentAssessor, interpreters, string, helpers } from 'yoastseo'
 import CornerstoneSeoAssessor from 'yoastseo/src/cornerstone/seoAssessor'
 import CornerstoneContentAssessor from 'yoastseo/src/cornerstone/contentAssessor'
-import SerpPreview from 'react-serp-preview'
+import Jed from 'jed'
 import { RatingError, RatingFeedback, RatingBad, RatingOk, RatingGood, RatingUnknown } from './Rating'
 import styles from './SeoAnalysis.css'
-import { i18n as getI18n} from './i18n'
-import { studio } from '@kaliber/sanity-preview'
 
-const i18n = getI18n('en')
+const i18n = new Jed({
+  domain: 'js-text-analysis',
+  // eslint-disable-next-line camelcase
+  locale_data: {
+    'js-text-analysis': {
+      '': {},
+    },
+  },
+})
 
 const ratingRenderers = {
   error: RatingError,
@@ -19,14 +27,42 @@ const ratingRenderers = {
   default: RatingUnknown
 }
 
-export function seoView(S, context, config) {
-  return S.view.component(x => <SeoAnalysis {...x} client={context.getClient({ apiVersion: '2022-12-07' })} resolveProductionUrl={config.resolveProductionUrl} />).title(config?.title ?? 'SEO')
+export function SeoAnalysis(props) {
+  const document = props?.document?.displayed ?? null
+  const client = useClient({ apiVersion: '2023-08-31'})
+  const schema = useSchema()
+  const schemaType = schema.get(document._type)
+
+  const [canonicalUrl, setCanonicalUrl] = React.useState(null)
+  const [assessmentUrl, setAssessmentUrl] = React.useState(null)
+  
+  const { resolvePreviewUrl, resolvePublishedUrl, mainContentSelector = 'main' } = schemaType.fields.find(x => x.name === 'seo').type.options
+  
+  // TODO: fix using react-query
+  React.useEffect(
+    () => {
+      if (!document) return
+
+      const publishedUrlPromise = resolvePublishedUrl({ document, schema })
+      const previewUrlPromise = document._id.startsWith('drafts.') 
+        ? resolvePreviewUrl({ document, schema, client })
+        : publishedUrlPromise
+      
+      publishedUrlPromise.then(setCanonicalUrl)
+      previewUrlPromise.then(setAssessmentUrl)
+    },
+    [document, schema, client]
+  )
+
+  return (canonicalUrl && assessmentUrl) 
+    ? <SeoAnalysisImpl {...props} {...{ canonicalUrl, assessmentUrl, mainContentSelector }} /> 
+    : null
 }
 
-export function SeoAnalysis({ document: { draft, published }, client, resolveProductionUrl }) {
-  const document = draft || published
+function SeoAnalysisImpl({ document: { displayed: document }, mainContentSelector, canonicalUrl, assessmentUrl }) {
+  const { seo, content, meta } = useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document })
+  
   const hasContent = Boolean(document?._id)
-  const { seo, content, meta } = useSeo({ resolveProductionUrl, client, document })
 
   return (
     <div className={styles.component}>
@@ -110,7 +146,7 @@ function Heading({ children }) {
   return <h3 className={styles.componentHeading}>{children}</h3>
 }
 
-function useSeo({ resolveProductionUrl, client, document }) {
+function useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document }) {
   const [seo, setSeo] = React.useState(assess.defaultResult)
 
   React.useEffect(
@@ -128,17 +164,17 @@ function useSeo({ resolveProductionUrl, client, document }) {
 
       async function run() {
         if (!valid) return
-        const { url, publishedUrl } = await getUrls(resolveProductionUrl, client, document)
+        
         if (!valid) return
-        const html = await getHtml({ url })
+        const html = await getHtml(assessmentUrl)
 
         if (!valid) return
 
         const seo = assess({
           html,
-          url: publishedUrl,
+          mainContentSelector,
+          url: canonicalUrl,
           seo: document.seo ?? {},
-          locale: 'nl' // language in which we display messages
         })
 
         setSeo(seo)
@@ -166,12 +202,12 @@ assess.defaultResult = {
   },
   meta: null
 }
-function assess({ html, url, locale, seo: { keyphrase = '', synonyms = '', cornerstone = false } }) {
+function assess({ html, url, locale, mainContentSelector, seo: { keyphrase = '', synonyms = '', cornerstone = false } }) {
   const doc = new DOMParser().parseFromString(string.removeHtmlBlocks(html), 'text/html')
 
   const { title } = doc
   const description = doc.querySelector('meta[name=description]')?.getAttribute('content') ?? doc.body.innerText
-  const relevantHtml = (doc.querySelector('main') || doc.documentElement).outerHTML
+  const relevantHtml = (doc.querySelector(mainContentSelector) || doc.documentElement).outerHTML
 
   const paper = new Paper(relevantHtml, {
     keyword: keyphrase,
@@ -211,21 +247,7 @@ function assess({ html, url, locale, seo: { keyphrase = '', synonyms = '', corne
   }
 }
 
-async function getUrls(resolveProductionUrl, client, document) {
-  const isDraft = document._id.startsWith('drafts.')
-
-  const publishedUrl = await resolveProductionUrl(document)
-
-  const url = isDraft
-    ? await resolveProductionUrl(document, {
-        queryString: { preview: await studio.getPreviewSecret({ sanityClient: client }) }
-      })
-    : publishedUrl
-
-  return { url, publishedUrl }
-}
-
-async function getHtml({ url }) {
+async function getHtml(url) {
   const response = await fetch(url)
   return response.text()
 }
