@@ -7,7 +7,7 @@
     "seo"
   ],
   "license": "MIT",
-  "main": "./src/index.js",
+  "main": "./src/SanityPluginSeo.js",
   "files": [
     "src/**",
     "sanity.json",
@@ -35,9 +35,9 @@
     "@kaliber/sanity-preview": "^0.0.1",
     "@kaliber/use-is-mounted-ref": "^1.0.2",
     "classnames": "^2.3.2",
-    "groq": "^3.16.1",
+    "groq": "^3.16.2",
     "react": "^18.2.0",
     "react-icons": "^4.10.1",
-    "sanity": "^3.16.1"
+    "sanity": "^3.16.2"
   }
 }

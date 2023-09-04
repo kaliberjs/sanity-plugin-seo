@@ -13,7 +13,11 @@ const i18n = new Jed({
   // eslint-disable-next-line camelcase
   locale_data: {
     'js-text-analysis': {
-      '': {},
+      '': {
+        'domain': 'js-text-analysis',
+        'lang': 'en',
+        'plural_forms' : 'nplurals=2; plural=(n != 1);'
+      },
     },
   },
 })
@@ -27,40 +31,58 @@ const ratingRenderers = {
   default: RatingUnknown
 }
 
-export function SeoAnalysis(props) {
-  const document = props?.document?.displayed ?? null
-  const client = useClient({ apiVersion: '2023-08-31'})
-  const schema = useSchema()
-  const schemaType = schema.get(document._type)
+export function SeoAnalysis({ document: { displayed: document }, schemaType, options }) {
+  
+  const { mainContentSelector = 'main' } = useSeoOptions({ schemaType })
+  const { canonicalUrl, assessmentUrl } = useUrls({ document, options })
 
-  const [canonicalUrl, setCanonicalUrl] = React.useState(null)
-  const [assessmentUrl, setAssessmentUrl] = React.useState(null)
-  
-  const { resolvePreviewUrl, resolvePublishedUrl, mainContentSelector = 'main' } = schemaType.fields.find(x => x.name === 'seo').type.options
-  
-  // TODO: fix using react-query
+  return (canonicalUrl && assessmentUrl) 
+    ? <SeoAnalysisImpl {...{ document, canonicalUrl, assessmentUrl, mainContentSelector, options }} /> 
+    : null
+}
+
+function useUrls({ document, options }) {
+  const { resolvePublishedUrl, resolvePreviewUrl, getClient } = options
+  const [urls, setUrls] = React.useState({ canonicalUrl: null, assessmentUrl: null })
+
+  const schema = useSchema()
+
   React.useEffect(
     () => {
       if (!document) return
 
-      const publishedUrlPromise = resolvePublishedUrl({ document, schema })
-      const previewUrlPromise = document._id.startsWith('drafts.') 
-        ? resolvePreviewUrl({ document, schema, client })
-        : publishedUrlPromise
-      
-      publishedUrlPromise.then(setCanonicalUrl)
-      previewUrlPromise.then(setAssessmentUrl)
+      let valid = true
+
+      Promise
+        .all([
+          resolvePublishedUrl({ document, schema, getClient }),
+          resolvePreviewUrl({ document, schema, getClient })
+        ])
+        .then(([canonicalUrl, assessmentUrl]) => {
+          if (!valid) return
+          setUrls({ canonicalUrl, assessmentUrl })
+        })
+        .catch(e => console.error(e))
+
+      return () => {
+        valid = false
+      }
     },
-    [document, schema, client]
+    [document, schema, getClient, resolvePublishedUrl, resolvePreviewUrl]
   )
 
-  return (canonicalUrl && assessmentUrl) 
-    ? <SeoAnalysisImpl {...props} {...{ canonicalUrl, assessmentUrl, mainContentSelector }} /> 
-    : null
+  return urls
 }
 
-function SeoAnalysisImpl({ document: { displayed: document }, mainContentSelector, canonicalUrl, assessmentUrl }) {
-  const { seo, content, meta } = useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document })
+function useSeoOptions({ schemaType }) {
+  return React.useMemo(
+    () => schemaType.fields.find(x => x.name === 'seo').type.options,
+    [schemaType]
+  )
+}
+
+function SeoAnalysisImpl({ document, mainContentSelector, canonicalUrl, assessmentUrl, options }) {
+  const { seo, content, meta } = useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document, options })
   
   const hasContent = Boolean(document?._id)
 
@@ -146,8 +168,9 @@ function Heading({ children }) {
   return <h3 className={styles.componentHeading}>{children}</h3>
 }
 
-function useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document }) {
-  const [seo, setSeo] = React.useState(assess.defaultResult)
+function useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document, options }) {
+  const { multiLanguage } = options
+  const [seoResult, setSeoResult] = React.useState(assess.defaultResult)
 
   React.useEffect(
     () => {
@@ -164,20 +187,21 @@ function useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document }) 
 
       async function run() {
         if (!valid) return
-        
-        if (!valid) return
         const html = await getHtml(assessmentUrl)
 
         if (!valid) return
 
-        const seo = assess({
+        const { seo, language = multiLanguage.defaultLanguage } = document
+        const { icu } = multiLanguage.languages[language]
+        const seoResult = assess({
           html,
           mainContentSelector,
           url: canonicalUrl,
-          seo: document.seo ?? {},
+          seo: seo ?? {},
+          locale: icu
         })
 
-        setSeo(seo)
+        setSeoResult(seoResult)
       }
 
       return () => {
@@ -188,7 +212,7 @@ function useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document }) 
     [document, assessmentUrl, canonicalUrl, mainContentSelector]
   )
 
-  return seo
+  return seoResult
 }
 
 assess.defaultResult = {
