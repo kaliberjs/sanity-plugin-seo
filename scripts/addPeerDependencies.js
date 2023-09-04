@@ -9,7 +9,7 @@ const packages = Object.keys(config.peerDependencies)
 
 const yarn = childProcess.spawn(
   'yarn',
-  `add --peer --pure-lockfile --modules-folder ts/node_modules`.split(' ').concat(packages),
+  `add --peer --pure-lockfile`.split(' ').concat(packages),
   { env: { ...process.env, PREVENT_LOOP: 'true' } }
 )
 yarn.stdout.on('data', data => process.stdout.write(data))
