@@ -53,7 +53,7 @@ export const pagina = withSeo()({
 ## Development
 
 ```
-> yarn
+> yarn --modules-folder ts/node_modules
 > yarn link
 > yarn watch
 ```
