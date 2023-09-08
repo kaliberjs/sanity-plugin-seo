@@ -2,6 +2,7 @@ import { definePlugin } from 'sanity'
 import { buildSchema } from './schema'
 
 export { SeoAnalysis } from './components/SeoAnalysis'
+export { typeHasSeo } from './typeHasSeo'
 
 export const sanityPluginSeo = definePlugin(
   () => ({
@@ -11,7 +12,3 @@ export const sanityPluginSeo = definePlugin(
     },
   })
 )
-
-export function typeHasSeo({ schema, schemaType }) {
-  return schema.get(schemaType).fields.some(x => x.name === 'seo')
-}
