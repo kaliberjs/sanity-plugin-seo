@@ -42,7 +42,7 @@ export function SeoAnalysis({ document: { displayed: document }, schemaType, opt
 }
 
 function useUrls({ document, options }) {
-  const { resolvePublishedUrl, resolvePreviewUrl, getClient } = options
+  const { resolvePublishedUrl, resolvePreviewUrl, getClient, reportError } = options
   const [urls, setUrls] = React.useState({ canonicalUrl: null, assessmentUrl: null })
 
   const schema = useSchema()
@@ -62,7 +62,7 @@ function useUrls({ document, options }) {
           if (!valid) return
           setUrls({ canonicalUrl, assessmentUrl })
         })
-        .catch(e => console.error(e))
+        .catch(reportError)
 
       return () => {
         valid = false
@@ -169,7 +169,7 @@ function Heading({ children }) {
 }
 
 function useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document, options }) {
-  const { multiLanguage } = options
+  const { multiLanguage, reportError } = options
   const [seoResult, setSeoResult] = React.useState(assess.defaultResult)
 
   React.useEffect(
@@ -178,10 +178,7 @@ function useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document, op
 
       let valid = true
       const timeoutId = setTimeout(
-        () => run().catch(error => {
-          // TODO: reportError(error)
-          console.error(error)
-        }),
+        () => run().catch(reportError),
         500
       )
 
