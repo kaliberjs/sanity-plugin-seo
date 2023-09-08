@@ -11,7 +11,7 @@
   "files": [
     "src/**",
     "sanity.json",
-    "LICENCE",
+    "LICENSE",
     "package.json",
     "readme.md",
     "v2-incompatible.js"
