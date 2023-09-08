@@ -5,17 +5,17 @@ export function buildSchema() {
     type: 'object',
     fields: [
       {
-        title: 'Focus keyphrase', // @peeke, waar is dit voor?
+        title: 'Focus keyphrase',
         name: 'keyphrase',
         type: 'string',
       },
       {
-        title: 'Synonyms', // @peeke, waar is dit voor?
+        title: 'Synonyms',
         name: 'synonyms',
         type: 'string',
       },
       {
-        title: 'Mark as cornerstone content', // @peeke, wat betekent dit?
+        title: 'Mark as cornerstone content',
         name: 'cornerstone',
         type: 'boolean',
       },
@@ -76,7 +76,7 @@ export function buildSchema() {
         },
         fields: [
           {
-            title: 'Canonical url', // @peeke moet dit een absolute of relative url zijn?
+            title: 'Canonical url',
             name: 'canonicalUrl',
             type: 'string',
           },
