@@ -1,26 +1,13 @@
 import React from 'react'
-import SerpPreview from 'react-serp-preview'
-import { useSchema, useClient } from 'sanity'
+import { useSchema } from 'sanity'
 import { Paper, SeoAssessor, ContentAssessor, interpreters, string, helpers } from 'yoastseo'
 import CornerstoneSeoAssessor from 'yoastseo/src/cornerstone/seoAssessor'
 import CornerstoneContentAssessor from 'yoastseo/src/cornerstone/contentAssessor'
-import Jed from 'jed'
+import SerpPreview from 'react-serp-preview'
 import { RatingError, RatingFeedback, RatingBad, RatingOk, RatingGood, RatingUnknown } from './Rating'
 import styles from './SeoAnalysis.css'
+import { i18n } from './i18n'
 
-const i18n = new Jed({
-  domain: 'js-text-analysis',
-  // eslint-disable-next-line camelcase
-  locale_data: {
-    'js-text-analysis': {
-      '': {
-        'domain': 'js-text-analysis',
-        'lang': 'en',
-        'plural_forms' : 'nplurals=2; plural=(n != 1);'
-      },
-    },
-  },
-})
 
 const ratingRenderers = {
   error: RatingError,
@@ -39,46 +26,6 @@ export function SeoAnalysis({ document: { displayed: document }, schemaType, opt
   return (canonicalUrl && assessmentUrl) 
     ? <SeoAnalysisImpl {...{ document, canonicalUrl, assessmentUrl, mainContentSelector, options }} /> 
     : null
-}
-
-function useUrls({ document, options }) {
-  const { resolvePublishedUrl, resolvePreviewUrl, getClient, reportError } = options
-  const [urls, setUrls] = React.useState({ canonicalUrl: null, assessmentUrl: null })
-
-  const schema = useSchema()
-
-  React.useEffect(
-    () => {
-      if (!document) return
-
-      let valid = true
-
-      Promise
-        .all([
-          resolvePublishedUrl({ document, schema, getClient }),
-          resolvePreviewUrl({ document, schema, getClient })
-        ])
-        .then(([canonicalUrl, assessmentUrl]) => {
-          if (!valid) return
-          setUrls({ canonicalUrl, assessmentUrl })
-        })
-        .catch(reportError)
-
-      return () => {
-        valid = false
-      }
-    },
-    [document, schema, getClient, resolvePublishedUrl, resolvePreviewUrl]
-  )
-
-  return urls
-}
-
-function useSeoOptions({ schemaType }) {
-  return React.useMemo(
-    () => schemaType.fields.find(x => x.name === 'seo').type.options,
-    [schemaType]
-  )
 }
 
 function SeoAnalysisImpl({ document, mainContentSelector, canonicalUrl, assessmentUrl, options }) {
@@ -266,6 +213,46 @@ function assess({ html, url, locale, mainContentSelector, seo: { keyphrase = '',
       return { ...rest, html }
     }
   }
+}
+
+function useUrls({ document, options }) {
+  const { resolvePublishedUrl, resolvePreviewUrl, getClient, reportError } = options
+  const [urls, setUrls] = React.useState({ canonicalUrl: null, assessmentUrl: null })
+
+  const schema = useSchema()
+
+  React.useEffect(
+    () => {
+      if (!document) return
+
+      let valid = true
+
+      Promise
+        .all([
+          resolvePublishedUrl({ document, schema, getClient }),
+          resolvePreviewUrl({ document, schema, getClient })
+        ])
+        .then(([canonicalUrl, assessmentUrl]) => {
+          if (!valid) return
+          setUrls({ canonicalUrl, assessmentUrl })
+        })
+        .catch(reportError)
+
+      return () => {
+        valid = false
+      }
+    },
+    [document, schema, getClient, resolvePublishedUrl, resolvePreviewUrl]
+  )
+
+  return urls
+}
+
+function useSeoOptions({ schemaType }) {
+  return React.useMemo(
+    () => schemaType.fields.find(x => x.name === 'seo').type.options,
+    [schemaType]
+  )
 }
 
 async function getHtml(url) {
