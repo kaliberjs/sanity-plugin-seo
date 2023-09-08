@@ -7,7 +7,7 @@
     "seo"
   ],
   "license": "MIT",
-  "main": "./src/SanityPluginSeo.js",
+  "main": "./src/sanityPluginSeo.js",
   "files": [
     "src/**",
     "sanity.json",
