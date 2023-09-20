@@ -1,17 +1,13 @@
 import React from 'react'
+import { useSchema } from 'sanity'
 import { Paper, SeoAssessor, ContentAssessor, interpreters, string, helpers } from 'yoastseo'
 import CornerstoneSeoAssessor from 'yoastseo/src/cornerstone/seoAssessor'
 import CornerstoneContentAssessor from 'yoastseo/src/cornerstone/contentAssessor'
 import SerpPreview from 'react-serp-preview'
 import { RatingError, RatingFeedback, RatingBad, RatingOk, RatingGood, RatingUnknown } from './Rating'
 import styles from './SeoAnalysis.css'
-import pluginConfig from 'config:@kaliber/sanity-plugin-seo'
-import { i18n as getI18n} from './i18n'
-import { studio } from '@kaliber/sanity-preview'
-import sanityClient from 'part:@sanity/base/client'
-import { resolveProductionUrl } from 'part:@kaliber/resolve-production-url'
+import { i18n } from './i18n'
 
-const i18n = getI18n(pluginConfig.language)
 
 const ratingRenderers = {
   error: RatingError,
@@ -22,10 +18,20 @@ const ratingRenderers = {
   default: RatingUnknown
 }
 
-export function SeoAnalysis({ document: { draft, published } }) {
-  const document = draft || published
+export function SeoAnalysis({ document: { displayed: document }, schemaType, options }) {
+  
+  const { mainContentSelector = 'main' } = useSeoOptions({ schemaType })
+  const { canonicalUrl, assessmentUrl } = useUrls({ document, options })
+
+  return (canonicalUrl && assessmentUrl) 
+    ? <SeoAnalysisImpl {...{ document, canonicalUrl, assessmentUrl, mainContentSelector, options }} /> 
+    : null
+}
+
+function SeoAnalysisImpl({ document, mainContentSelector, canonicalUrl, assessmentUrl, options }) {
+  const { seo, content, meta } = useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document, options })
+  
   const hasContent = Boolean(document?._id)
-  const { seo, content, meta } = useSeo({ document })
 
   return (
     <div className={styles.component}>
@@ -109,8 +115,9 @@ function Heading({ children }) {
   return <h3 className={styles.componentHeading}>{children}</h3>
 }
 
-function useSeo({ document }) {
-  const [seo, setSeo] = React.useState(assess.defaultResult)
+function useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document, options }) {
+  const { multiLanguage, reportError } = options
+  const [seoResult, setSeoResult] = React.useState(assess.defaultResult)
 
   React.useEffect(
     () => {
@@ -118,29 +125,27 @@ function useSeo({ document }) {
 
       let valid = true
       const timeoutId = setTimeout(
-        () => run().catch(error => {
-          // TODO: reportError(error)
-          console.error(error)
-        }),
+        () => run().catch(reportError),
         500
       )
 
       async function run() {
         if (!valid) return
-        const { url, publishedUrl } = await getUrls(document)
-        if (!valid) return
-        const html = await getHtml({ url })
+        const html = await getHtml(assessmentUrl)
 
         if (!valid) return
 
-        const seo = assess({
+        const { seo, language = multiLanguage.defaultLanguage } = document
+        const { icu } = multiLanguage.languages[language]
+        const seoResult = assess({
           html,
-          url: publishedUrl,
-          seo: document.seo ?? {},
-          locale: pluginConfig.icu // language in which we display messages
+          mainContentSelector,
+          url: canonicalUrl,
+          seo: seo ?? {},
+          locale: icu
         })
 
-        setSeo(seo)
+        setSeoResult(seoResult)
       }
 
       return () => {
@@ -148,10 +153,10 @@ function useSeo({ document }) {
         clearTimeout(timeoutId)
       }
     },
-    [document]
+    [document, assessmentUrl, canonicalUrl, mainContentSelector]
   )
 
-  return seo
+  return seoResult
 }
 
 assess.defaultResult = {
@@ -165,12 +170,12 @@ assess.defaultResult = {
   },
   meta: null
 }
-function assess({ html, url, locale, seo: { keyphrase = '', synonyms = '', cornerstone = false } }) {
+function assess({ html, url, locale, mainContentSelector, seo: { keyphrase = '', synonyms = '', cornerstone = false } }) {
   const doc = new DOMParser().parseFromString(string.removeHtmlBlocks(html), 'text/html')
 
   const { title } = doc
   const description = doc.querySelector('meta[name=description]')?.getAttribute('content') ?? doc.body.innerText
-  const relevantHtml = (doc.querySelector('main') || doc.documentElement).outerHTML
+  const relevantHtml = (doc.querySelector(mainContentSelector) || doc.documentElement).outerHTML
 
   const paper = new Paper(relevantHtml, {
     keyword: keyphrase,
@@ -210,21 +215,47 @@ function assess({ html, url, locale, seo: { keyphrase = '', synonyms = '', corne
   }
 }
 
-async function getUrls(document) {
-  const isDraft = document._id.startsWith('drafts.')
+function useUrls({ document, options }) {
+  const { resolvePublishedUrl, resolvePreviewUrl, getClient, reportError } = options
+  const [urls, setUrls] = React.useState({ canonicalUrl: null, assessmentUrl: null })
 
-  const publishedUrl = await resolveProductionUrl(document)
+  const schema = useSchema()
 
-  const url = isDraft
-    ? await resolveProductionUrl(document, {
-        queryString: { preview: await studio.getPreviewSecret({ sanityClient }) }
-      })
-    : publishedUrl
+  React.useEffect(
+    () => {
+      if (!document) return
 
-  return { url, publishedUrl }
+      let valid = true
+
+      Promise
+        .all([
+          resolvePublishedUrl({ document, schema, getClient }),
+          resolvePreviewUrl({ document, schema, getClient })
+        ])
+        .then(([canonicalUrl, assessmentUrl]) => {
+          if (!valid) return
+          setUrls({ canonicalUrl, assessmentUrl })
+        })
+        .catch(reportError)
+
+      return () => {
+        valid = false
+      }
+    },
+    [document, schema, getClient, resolvePublishedUrl, resolvePreviewUrl]
+  )
+
+  return urls
 }
 
-async function getHtml({ url }) {
+function useSeoOptions({ schemaType }) {
+  return React.useMemo(
+    () => schemaType.fields.find(x => x.name === 'seo').type.options,
+    [schemaType]
+  )
+}
+
+async function getHtml(url) {
   const response = await fetch(url)
   return response.text()
 }

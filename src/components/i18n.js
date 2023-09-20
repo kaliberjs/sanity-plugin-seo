@@ -1,17 +1,15 @@
-import Jed from 'jed' // Jed is used by Yoast SEO for internationalization
-import { nlJed } from './jedLanguages/nl'
-import { enJed } from './jedLanguages/en'
+import Jed from 'jed'
 
-export function i18n(language) {
-  return new Jed({
-    domain: 'js-text-analysis',
-    debug: true,
-    locale_data: {
-      'js-text-analysis': (
-        language === 'nl' ? nlJed :
-        language === 'en' ? enJed :
-        enJed
-      )
+export const i18n = new Jed({
+  domain: 'js-text-analysis',
+  // eslint-disable-next-line camelcase
+  locale_data: {
+    'js-text-analysis': {
+      '': {
+        'domain': 'js-text-analysis',
+        'lang': 'en',
+        'plural_forms' : 'nplurals=2; plural=(n != 1);'
+      },
     },
-  })
-}
+  },
+})

@@ -1,45 +1,43 @@
 {
   "name": "@kaliber/sanity-plugin-seo",
-  "version": "0.0.7",
+  "version": "2.0.0",
   "keywords": [
     "sanity",
-    "sanity-plugin"
+    "sanity-plugin",
+    "seo"
   ],
   "license": "MIT",
-  "main": "lib/seo.js",
+  "main": "./src/sanityPluginSeo.js",
   "files": [
     "src/**",
-    "lib/**",
     "sanity.json",
-    "LICENCE",
-    "config.dist.json",
+    "LICENSE",
     "package.json",
-    "README.md"
+    "readme.md",
+    "v2-incompatible.js"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "sanipack build",
-    "watch": "sanipack build --watch",
-    "verify": "sanipack verify",
-    "prepublishOnly": "sanipack build && sanipack verify",
     "prepare": "[ -f scripts/addPeerDependencies.js ] && node scripts/addPeerDependencies.js"
   },
   "peerDependencies": {
     "@kaliber/sanity-preview": "^0.0.1",
     "@kaliber/use-is-mounted-ref": "^1.0.2",
-    "classnames": "^2.3.1",
-    "groq": "^2.29.3",
+    "classnames": "^2.3.2",
+    "groq": "^3.16.2",
     "react": "^18.2.0",
-    "react-icons": "^4.4.0"
+    "react-icons": "^4.10.1",
+    "sanity": "^3.16.2"
   },
   "devDependencies": {
-    "sanipack": "^2.1.0"
+    "@kaliber/build": "^0.0.143"
   },
   "dependencies": {
+    "@sanity/incompatible-plugin": "^1.0.4",
     "jed": "^1.1.1",
     "react-serp-preview": "^1.0.0",
-    "yoastseo": "^1.91.0"
+    "yoastseo": "^1.91.2"
   }
 }
