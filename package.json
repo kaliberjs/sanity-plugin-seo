@@ -1,6 +1,6 @@
 {
   "name": "@kaliber/sanity-plugin-seo",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "keywords": [
     "sanity",
     "sanity-plugin"
@@ -29,10 +29,10 @@
   "peerDependencies": {
     "@kaliber/sanity-preview": "^0.0.1",
     "@kaliber/use-is-mounted-ref": "^1.0.2",
-    "classnames": "^2.3.1",
-    "groq": "^2.29.3",
+    "classnames": "^2.3.2",
+    "groq": "^3.16.7",
     "react": "^18.2.0",
-    "react-icons": "^4.4.0"
+    "react-icons": "^4.11.0"
   },
   "devDependencies": {
     "sanipack": "^2.1.0"
