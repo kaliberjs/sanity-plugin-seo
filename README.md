@@ -25,12 +25,13 @@ Yoast SEO Analysis.
 `admin/deskStructure.js`
 
 ```js
+import multiLanguageConfig from 'config:@kaliber/sanity-plugin-multi-language'
 import { SeoAnalysis, typeHasSeo } from '@kaliber/sanity-plugin-seo'
 
 export function getDefaultDocumentNode({ schemaType }) {
   return S.document().views([
     S.view.form(),
-    ...(typeHasSeo(schemaType) ? [S.view.component(SeoAnalysis).title('SEO')] : []),
+    ...(typeHasSeo(schemaType) ? [S.view.component(SeoAnalysis).options({ multiLanguage: multiLanguageConfig }).title('SEO')] : []),
   ])
 }
 ```

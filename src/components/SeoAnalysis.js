@@ -22,10 +22,10 @@ const ratingRenderers = {
   default: RatingUnknown
 }
 
-export function SeoAnalysis({ document: { draft, published } }) {
+export function SeoAnalysis({ document: { draft, published }, options }) {
   const document = draft || published
   const hasContent = Boolean(document?._id)
-  const { seo, content, meta } = useSeo({ document })
+  const { seo, content, meta } = useSeo({ document, options })
 
   return (
     <div className={styles.component}>
@@ -109,8 +109,9 @@ function Heading({ children }) {
   return <h3 className={styles.componentHeading}>{children}</h3>
 }
 
-function useSeo({ document }) {
-  const [seo, setSeo] = React.useState(assess.defaultResult)
+function useSeo({ document, options }) {
+  const { multiLanguage } = options
+  const [seoResult, setSeoResult] = React.useState(assess.defaultResult)
 
   React.useEffect(
     () => {
@@ -133,14 +134,16 @@ function useSeo({ document }) {
 
         if (!valid) return
 
-        const seo = assess({
+        const { seo, language = multiLanguage.defaultLanguage } = document
+        const { icu } = multiLanguage.languages[language]
+        const seoResult = assess({
           html,
           url: publishedUrl,
-          seo: document.seo ?? {},
-          locale: pluginConfig.icu // language in which we display messages
+          seo: seo ?? {},
+          locale: icu
         })
 
-        setSeo(seo)
+        setSeoResult(seoResult)
       }
 
       return () => {
@@ -151,7 +154,7 @@ function useSeo({ document }) {
     [document]
   )
 
-  return seo
+  return seoResult
 }
 
 assess.defaultResult = {
