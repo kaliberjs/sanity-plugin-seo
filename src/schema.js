@@ -80,13 +80,13 @@ export const schema = {
           type: 'string',
         },
         {
-          title: 'Allow indexation (index/noindex)',
+          title: 'Allow indexation (noindex | index)',
           name: 'allowIndex',
           type: 'boolean',
           initialValue: true
         },
         {
-          title: 'Allow following links (follow/nofollow)',
+          title: 'Allow following links (nofollow | follow)',
           name: 'allowFollow',
           type: 'boolean',
           initialValue: true
