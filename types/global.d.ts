@@ -1,3 +1,4 @@
+declare const cx: typeof import('classnames')
 
 declare module '*.css' {
   const x: { [any: string]: string }

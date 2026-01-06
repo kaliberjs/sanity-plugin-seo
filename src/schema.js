@@ -1,4 +1,6 @@
-export const schema = {
+import { defineType } from 'sanity' // eslint-disable-line import/named
+
+export const schema = defineType({
   title: 'SEO',
   name: 'seo',
   type: 'object',
@@ -94,4 +96,4 @@ export const schema = {
       ]
     }
   ]
-}
+})
