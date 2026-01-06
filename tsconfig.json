@@ -11,7 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "allowUmdGlobalAccess": true,
     "allowImportingTsExtensions": true,
-    "maxNodeModuleJsDepth": 5,
+    "maxNodeModuleJsDepth": 3,
     "lib": [
       "dom",
       "esnext"
