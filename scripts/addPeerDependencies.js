@@ -1,5 +1,5 @@
 const config = require('../package.json')
-const childProcess = require('child_process')
+const childProcess = require('node:child_process')
 
 if (process.env.PREVENT_LOOP) process.exit(0)
 

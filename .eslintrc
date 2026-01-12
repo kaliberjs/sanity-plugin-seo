@@ -1,5 +1,5 @@
 {
   "extends": [
-    "./ts/node_modules/@kaliber/build/.eslintrc"
+    "./ts/node_modules/@kaliber/eslint-plugin/.eslintrc"
   ]
 }

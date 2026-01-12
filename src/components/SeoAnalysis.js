@@ -1,13 +1,12 @@
 import React from 'react'
 import { useSchema } from 'sanity'
-import { Paper, SeoAssessor, ContentAssessor, interpreters, string, helpers } from 'yoastseo'
-import CornerstoneSeoAssessor from 'yoastseo/src/cornerstone/seoAssessor'
-import CornerstoneContentAssessor from 'yoastseo/src/cornerstone/contentAssessor'
+import { Paper, interpreters, languageProcessing, assessors } from 'yoastseo'
+import EnglishResearcher from 'yoastseo/build/languageProcessing/languages/en/Researcher'
+import DutchResearcher from 'yoastseo/build/languageProcessing/languages/nl/Researcher'
+import DefaultResearcher from 'yoastseo/build/languageProcessing/languages/_default/Researcher'
 import SerpPreview from 'react-serp-preview'
 import { RatingError, RatingFeedback, RatingBad, RatingOk, RatingGood, RatingUnknown } from './Rating'
 import styles from './SeoAnalysis.css'
-import { i18n } from './i18n'
-
 
 const ratingRenderers = {
   error: RatingError,
@@ -19,18 +18,18 @@ const ratingRenderers = {
 }
 
 export function SeoAnalysis({ document: { displayed: document }, schemaType, options }) {
-  
+
   const { mainContentSelector = 'main' } = useSeoOptions({ schemaType })
   const { canonicalUrl, assessmentUrl } = useUrls({ document, options })
 
-  return (canonicalUrl && assessmentUrl) 
-    ? <SeoAnalysisImpl {...{ document, canonicalUrl, assessmentUrl, mainContentSelector, options }} /> 
+  return (canonicalUrl && assessmentUrl)
+    ? <SeoAnalysisImpl {...{ document, canonicalUrl, assessmentUrl, mainContentSelector, options }} />
     : null
 }
 
 function SeoAnalysisImpl({ document, mainContentSelector, canonicalUrl, assessmentUrl, options }) {
   const { seo, content, meta } = useSeo({ assessmentUrl, canonicalUrl, mainContentSelector, document, options })
-  
+
   const hasContent = Boolean(document?._id)
 
   return (
@@ -170,8 +169,30 @@ assess.defaultResult = {
   },
   meta: null
 }
+
+/**
+ * Gets the appropriate researcher for a given language code.
+ * Falls back to default researcher if the language is not supported.
+ *
+ * @param {string} languageCode - The language code (e.g., 'en', 'nl', 'de')
+ * @param {Paper} paper - The Paper object
+ * @returns {Object} The researcher instance
+ */
+function getResearcher(languageCode, paper) {
+  const researchers = {
+    'en': EnglishResearcher,
+    'nl': DutchResearcher,
+    // Add more languages as needed
+  }
+
+  const ResearcherClass = researchers[languageCode] || DefaultResearcher
+
+  return new ResearcherClass(paper)
+}
+
 function assess({ html, url, locale, mainContentSelector, seo: { keyphrase = '', synonyms = '', cornerstone = false } }) {
-  const doc = new DOMParser().parseFromString(string.removeHtmlBlocks(html), 'text/html')
+  const cleanedHtml = languageProcessing.helpers.removeHtmlBlocks(html)
+  const doc = new DOMParser().parseFromString(cleanedHtml, 'text/html')
 
   const { title } = doc
   const description = doc.querySelector('meta[name=description]')?.getAttribute('content') ?? doc.body.innerText
@@ -183,14 +204,17 @@ function assess({ html, url, locale, mainContentSelector, seo: { keyphrase = '',
     description,
     url,
     title,
-    titleWidth: helpers.measureTextWidth(title),
     locale,
     permalink: url,
   })
 
+  // Extract language code from locale (e.g., 'en_US' -> 'en')
+  const languageCode = locale ? locale.split('_')[0].toLowerCase() : 'en'
+  const researcher = getResearcher(languageCode, paper)
+
   const [seoAssessor, contentAssessor] = cornerstone
-    ? [new CornerstoneSeoAssessor(i18n), new CornerstoneContentAssessor(i18n)]
-    : [new SeoAssessor(i18n), new ContentAssessor(i18n)]
+    ? [new assessors.CornerstoneSEOAssessor(researcher), new assessors.CornerstoneContentAssessor(researcher)]
+    : [new assessors.SEOAssessor(researcher), new assessors.ContentAssessor(researcher)]
 
   seoAssessor.assess(paper)
   contentAssessor.assess(paper)
