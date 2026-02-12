@@ -1,8 +1,9 @@
 import { definePlugin } from 'sanity'
-import { schema } from './schema'
+import { schema, defaultShareImageField } from './schema'
 
 export { SeoAnalysis } from './components/SeoAnalysis'
 export { typeHasSeo } from './typeHasSeo'
+export { defaultShareImageField }
 
 /**
  * @typedef {Object} SanityPluginSeoOptions

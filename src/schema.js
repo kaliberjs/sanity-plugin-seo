@@ -2,7 +2,7 @@
  * Default share image field definition
  * @type {{title: string, name: string, type: string, options?: Object, fields?: Array<Object>}}
  */
-const defaultShareImageField = {
+export const defaultShareImageField = {
   title: 'Share image',
   name: 'shareImage',
   type: 'image',
