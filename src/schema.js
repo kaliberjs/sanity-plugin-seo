@@ -1,7 +1,6 @@
-/**
- * Default share image field definition
- * @type {{title: string, name: string, type: string, options?: Object, fields?: Array<Object>}}
- */
+/** @import { FieldDefinition } from 'sanity' */
+
+/** @type {FieldDefinition} */
 export const defaultShareImageField = {
   title: 'Share image',
   name: 'shareImage',
@@ -18,11 +17,7 @@ export const defaultShareImageField = {
   ]
 }
 
-/**
- * Generate the SEO schema with custom options
- * @param {import('./sanityPluginSeo').SanityPluginSeoOptions} [options] - Schema configuration options
- * @returns {Object} Sanity schema definition
- */
+/** @arg {{ shareImageField?: FieldDefinition }} [config] */
 export function schema({ shareImageField = defaultShareImageField } = {}) {
   return {
     title: 'SEO',
