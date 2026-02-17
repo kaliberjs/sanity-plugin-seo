@@ -8,7 +8,6 @@
   ],
   "license": "MIT",
   "main": "./src/sanityPluginSeo.js",
-  "type": "module",
   "files": [
     "src/**",
     "sanity.json",
