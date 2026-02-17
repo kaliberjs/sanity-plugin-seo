@@ -8,6 +8,7 @@
   ],
   "license": "MIT",
   "main": "./src/sanityPluginSeo.js",
+  "type": "module",
   "files": [
     "src/**",
     "sanity.json",
@@ -20,19 +21,20 @@
     "access": "public"
   },
   "scripts": {
-    "prepare": "[ -f scripts/addPeerDependencies.js ] && node scripts/addPeerDependencies.js"
+    "postinstall": "[ -d ./scripts -a -f ./scripts/install-peer-dependencies-for-typescript.js ] && node ./scripts/install-peer-dependencies-for-typescript.js || true"
   },
   "peerDependencies": {
     "@kaliber/sanity-preview": "^0.0.1",
     "@kaliber/use-is-mounted-ref": "^1.0.2",
     "classnames": "^2.5.1",
     "groq": "^4.3.0",
-    "react": "^19.1.1",
+    "react": "^18.2.0",
     "react-icons": "^5.5.0",
     "sanity": "^4.3.0"
   },
   "devDependencies": {
-    "@kaliber/build": "^0.0.143"
+    "@kaliber/eslint-plugin": "^1.0.0",
+    "@kaliber/stylelint-plugin": "^1.0.0"
   },
   "dependencies": {
     "@sanity/incompatible-plugin": "^1.0.4",
