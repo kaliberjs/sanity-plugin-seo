@@ -8,11 +8,11 @@ export { defaultShareImageField }
 /** @import { FieldDefinition } from 'sanity' */
 
 export const sanityPluginSeo = definePlugin(
-  /** @arg {{ shareImageField?: FieldDefinition }} [options] */
+  /** @param {{ shareImageField?: FieldDefinition } | void} [options] */
   (options = {}) => ({
     name: 'sanity-plugin-seo',
     schema: {
-      types: (prev) => prev.concat(schema(options))
+      types: (prev) => prev.concat(schema(options || {}))
     },
   })
 )
