@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "jed": "^1.0.0",
-    "react-serp-preview": "^1.0.0",
+    "url": "^0.11.4",
+    "util": "^0.12.5",
     "yoastseo": "^1.0.0"
   },
   "peerDependencies": {
