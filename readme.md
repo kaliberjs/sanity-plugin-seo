@@ -39,6 +39,35 @@ defineConfig({
 })
 ```
 
+## Configuration
+
+### Custom Share Image Field
+
+By default, the plugin uses the standard Sanity `image` type with an alt text field for the share image. You can customize this to use a custom image type (e.g., `klbrImage`) or modify the field schema:
+
+```js
+sanityPluginSeo({
+  shareImageField: {
+    title: 'Share image',
+    name: 'shareImage',
+    type: 'klbrImage', // Use your custom image type
+    // No alt field needed for klbrImage
+  }
+})
+```
+
+You can also extend the default field definition to customize specific properties:
+
+```js
+import { sanityPluginSeo, defaultShareImageField } from '@kaliber/sanity-plugin-seo'
+
+sanityPluginSeo({
+  shareImageField: {
+    ...defaultShareImageField,
+    fields: [] // Remove the alt text field while keeping other defaults
+  }
+})
+```
 
 ## Usage
 
