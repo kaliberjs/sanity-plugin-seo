@@ -12,7 +12,7 @@ export type Options = {
     },
     defaultLanguage: string,
   },
-  reportError(e: unknown): void,
+  reportError(e: Error): void,
   resolvePublishedUrl(props:  { document: SanityDocument, schema: Schema, getClient: getClient }): Promise<string>,
   resolvePreviewUrl(props:  { document: SanityDocument, schema: Schema, getClient: getClient }): Promise<string>,
   getClient: getClient,
