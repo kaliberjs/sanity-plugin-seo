@@ -1,3 +1,4 @@
+import { defineType } from 'sanity' // eslint-disable-line import/named
 /** @import { FieldDefinition } from 'sanity' */
 
 /** @type {FieldDefinition} */
@@ -19,7 +20,7 @@ export const defaultShareImageField = {
 
 /** @arg {{ shareImageField?: FieldDefinition }} [config] */
 export function schema({ shareImageField = defaultShareImageField } = {}) {
-  return {
+  return defineType({
     title: 'SEO',
     name: 'seo',
     type: 'object',
@@ -101,5 +102,5 @@ export function schema({ shareImageField = defaultShareImageField } = {}) {
         ]
       }
     ]
-  }
+  })
 }

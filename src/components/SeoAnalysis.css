@@ -3,8 +3,10 @@
   flex-direction: column;
   align-items: stretch;
   padding: 1em;
+  /* stylelint-disable kaliber/layout-related-properties */
   max-width: 640px;
   margin: auto;
+  /* stylelint-enable kaliber/layout-related-properties */
 
   & > * {
     max-width: 100%;
@@ -14,6 +16,7 @@
     margin-bottom: 1em;
   }
 
+  /* stylelint-disable-next-line kaliber/naming-policy */
   & > .componentSummary {
     margin-bottom: 2em;
   }
@@ -62,6 +65,7 @@
   padding: 2px 0;
 }
 
+/* stylelint-disable-next-line kaliber/selector-policy */
 .label a {
   color: inherit;
 
@@ -72,5 +76,6 @@
 }
 
 .componentHeading {
+  /* stylelint-disable-next-line kaliber/layout-related-properties */
   margin: 0;
 }
