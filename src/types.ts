@@ -13,8 +13,8 @@ export type Options = {
     defaultLanguage: string,
   },
   reportError(e: Error): void,
-  resolvePublishedUrl(props:  { document: SanityDocument, schema: Schema, getClient: getClient }): Promise<string>,
-  resolvePreviewUrl(props:  { document: SanityDocument, schema: Schema, getClient: getClient }): Promise<string>,
+  resolvePublishedUrl(props:  { document: SanityDocument, schema: Schema, getClient: getClient }): Promise<null | string>,
+  resolvePreviewUrl(props:  { document: SanityDocument, schema: Schema, getClient: getClient }): Promise<null | string>,
   getClient: getClient,
 }
 
